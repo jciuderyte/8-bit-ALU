@@ -1,7 +1,0 @@
-<Solution>
-  <Configurations>
-    <Platform Name="x64" />
-    <Platform Name="x86" />
-  </Configurations>
-  <Project Path="ALU/ALU.vcxproj" Id="5f3663fe-6834-4b26-9fd4-60f07592bb74" />
-</Solution>
