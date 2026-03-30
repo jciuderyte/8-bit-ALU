@@ -121,9 +121,9 @@ void SHIFTER(bool A[8], bool S[8],bool c)
 	S[7] = AND(c,A[6]);
 }
 
-//----- PALYGINIMAS ----------
+//----- EQUAL ---------------
 
-bool Palyginimas(bool A[8], bool B[8])
+bool equal(bool A[8], bool B[8])
 {
 bool k1, k2, F, Cflag;
 bool rez[8]={0,0,0,0,0,0,0,0};
@@ -144,7 +144,7 @@ bool carryOut=0, carryIn;
 for (int i = 7;i >= 0;i--)
 {
 	bool temp[8]={0,0,0,0,0,0,0,0};
-	if (Palyginimas(B, temp)) break;
+	if (equal(B, temp)) break;
 	else
 	{
 		if (B[7]==1)
@@ -175,28 +175,28 @@ void EIGHTBITALU(bool A[8], bool B[8], bool D[3], bool Cntr, bool Output[8], boo
 {
 	bool R[8];
 	decoder3to8(D, R);
-	if (R[0]) //nera operacijos 000
+	if (R[0]) //no op 000
 	{
-		std::cout << "000 - nera op \n";
+		std::cout << "000 - no operation \n";
 	}
 
 	if (R[1]) //A == B 001
 	{
-		F = Palyginimas(A,B);
+		F = equal(A,B);
 	}
 
-	if (R[2]) //nera operacijos 010
+	if (R[2]) //no op 010
 	{
-		std::cout << "010 - nera op \n";
+		std::cout << "010 - no operation \n";
 	}
 
 	if (R[3]) //A-B 011
 	{
-		// inversija B
+		// ~ B
 		for (int i = 0; i < 8; i++)
 			ONEBITALU(0, B[i], 0, 1, 0, 1, 0, Cflag, B[i]);
 
-		// iversija B iki pirmo 1 po apvertimo - ONEBITALU
+		// ~ B + 1
 		for (int i = 7;i >= 0;i--)
 		{
 			ONEBITALU(0, B[i], 0, 1, 0, 1, 0, Cflag, B[i]);
@@ -212,9 +212,9 @@ void EIGHTBITALU(bool A[8], bool B[8], bool D[3], bool Cntr, bool Output[8], boo
 		}
 	}
 
-	if (R[4]) //nera operacijos 100
+	if (R[4]) //no op 100
 	{
-		std::cout << "100 - nera op \n";
+		std::cout << "100 - no operation \n";
 	}
 
 	if (R[5]) //A>>1 A<<1 101
@@ -245,7 +245,7 @@ void EIGHTBITALU(bool A[8], bool B[8], bool D[3], bool Cntr, bool Output[8], boo
 
 int main() {
 
-	bool A[8],B[8],D[3],Output[8]={0,0,0,0,0,0,0,0};
+	bool A[8], B[8], D[3], Output[8]={0,0,0,0,0,0,0,0};
 	bool Cntr = 0, Cflag, F = true;
 
 	
@@ -258,91 +258,12 @@ int main() {
 	std::cout << '\n' << "Cntr: ";
 	std::cin>>Cntr;
 
-	EIGHTBITALU(A,B,D,Cntr,Output,Cflag,F);
+	EIGHTBITALU(A, B, D, Cntr, Output, Cflag, F);
 	std::cout<<F<<'\n';
 	std::cout<<"Output: ";
 	for(int i = 0; i < 8; i++)
 	std::cout<<Output[i]<<" ";
 	std::cout<<'\n'<<"Carry Flag: "<<Cflag<<'\n';
 
-
-	/*
-
-	std::cout << " NAND teisingumo lentele:" << "\n";
-	std::cout << "-----------------\n";
-	std::cout << " A  B | Output \n";
-	std::cout << "-----------------\n";
-
-	for (int i = 0; i < 2; i++)
-		for (int j = 0; j < 2; j++)
-			std::cout << " " << i << "  " << j << " | " << NAND(i, j) << "\n";
-	std::cout << "\n";
-
-
-	std::cout << " OR teisingumo lentele:" << "\n";
-	std::cout << "-----------------\n";
-	std::cout << " A  B | Output \n";
-	std::cout << "-----------------\n";
-
-	for (int i = 0; i < 2; i++)
-		for (int j = 0; j < 2; j++)
-			std::cout << " " << i << "  " << j << " | " << OR(i, j) << "\n";
-	std::cout << "\n";
-
-	std::cout << " AND teisingumo lentele:" << "\n";
-	std::cout << "-----------------\n";
-	std::cout << " A  B | Output \n";
-	std::cout << "-----------------\n";
-
-	for (int i = 0; i < 2; i++)
-		for (int j = 0; j < 2; j++)
-			std::cout << " " << i << "  " << j << " | " << AND(i, j) << "\n";
-	std::cout << "\n";
-
-	std::cout << " NOT teisingumo lentele:" << "\n";
-	std::cout << "-----------------\n";
-	std::cout << " A  | Output \n";
-	std::cout << "-----------------\n";
-
-	for (int i = 0; i < 2; i++)
-		for (int j = 0; j < 2; j++)
-			std::cout << " " << i << " | " << NOT(i) << "\n";
-	std::cout << "\n";
-
-	std::cout << " XOR teisingumo lentele:" << "\n";
-	std::cout << "-----------------\n";
-	std::cout << " A  B | Output \n";
-	std::cout << "-----------------\n";
-
-	for (int i = 0; i < 2; i++)
-		for (int j = 0; j < 2; j++)
-			std::cout << " " << i << "  " << j << " | " << XOR(i, j) << "\n";
-	std::cout << "\n";
-
-	std::cout << " NOR teisingumo lentele:" << "\n";
-	std::cout << "-----------------\n";
-	std::cout << " A  B | Output \n";
-	std::cout << "-----------------\n";
-
-	for (int i = 0; i < 2; i++)
-		for (int j = 0; j < 2; j++)
-			std::cout << " " << i << "  " << j << " | " << NOR(i, j) << "\n";
-	std::cout << "\n";
-
-	std::cout << " SUMOS teisingumo lentele:" << "\n";
-	std::cout << "-----------------\n";
-	std::cout << " A  B | Output \n";
-	std::cout << "-----------------\n";
-
-	bool sum, cout;
-	for (int i = 0; i < 2; i++)
-		for (int j = 0; j < 2; j++)
-			for (int z = 0; z < 2; z++)
-			{
-				FULLADDER(i, j, z, sum, cout);
-				std::cout << " " << i << "  " << j << " | " << sum << cout << "\n";
-			}
-
-*/
 	return 0;
 }
